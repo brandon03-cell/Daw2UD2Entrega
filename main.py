@@ -1,4 +1,4 @@
-from concurso import Concierto, Usuario, EntradaGrada, EntradaPista, EntradaVIP
+from concurso import Concierto, Usuario
 
 # Exercise 1
 concierto1 = Concierto('Juanjo', 'Sevilla', 40.0, 100)
@@ -23,7 +23,7 @@ usuario3.comprar_entrada(concierto2, 'grada')
 for usuario in usuarios:
     print(usuario)
     for entrada in usuario.entradas_compradas:
-        print('  ', entrada)
+        print(f'   {entrada}')
 
 # Exercise 4
 usuario1.valorar(concierto1, 9)
@@ -35,7 +35,7 @@ usuario3.valorar(concierto2, 8)
 total_entradas = 0
 for concierto in conciertos:
     total_entradas += len(concierto.entradas_vendidas)
-print('Entradas vendidas en total:', total_entradas)
+print(f'Entradas vendidas en total: {total_entradas}')
 
 # 2. Entradas vendidas de cada tipo
 pista = 0
@@ -43,28 +43,28 @@ grada = 0
 vip = 0
 for concierto in conciertos:
     for entrada in concierto.entradas_vendidas:
-        if isinstance(entrada, EntradaPista):
+        if entrada.tipo == 'pista':
             pista += 1
-        elif isinstance(entrada, EntradaGrada):
+        elif entrada.tipo == 'grada':
             grada += 1
-        elif isinstance(entrada, EntradaVIP):
+        elif entrada.tipo == 'vip':
             vip += 1
-print('Entradas de pista:', pista)
-print('Entradas de grada:', grada)
-print('Entradas VIP:', vip)
+print(f'Entradas de pista: {pista}')
+print(f'Entradas de grada: {grada}')
+print(f'Entradas VIP: {vip}')
 
 # 3. Recaudacion total
-recaudacion = 0.0
+recaudacion = 0
 for concierto in conciertos:
     recaudacion += concierto.calcular_recaudacion()
-print(f'Recaudación total: {recaudacion:.2f} €')
+print(f'Recaudación total: {recaudacion} €')
 
 # 4. Precio medio de todas las entradas
 if total_entradas > 0:
-    precio_medio = recaudacion / total_entradas
+    precio_medio = round(recaudacion / total_entradas, 2)
 else:
-    precio_medio = 0.0
-print(f'Precio medio: {precio_medio:.2f} €')
+    precio_medio = 0
+print(f'Precio medio: {precio_medio} €')
 
 # 5. Concierto con mas entradas vendidas
 mas_vendido = conciertos[0]

@@ -2,13 +2,14 @@
 class Entrada:
     def __init__(self, concierto):
         self.concierto = concierto
+        self.tipo = 'general'
 
     # La entrada general cuesta el precio base del concierto
     def get_precio_total(self):
         return self.concierto.precio_base
 
     def __str__(self):
-        return f'Entrada general para {self.concierto.artista} - {self.get_precio_total():.2f} €'
+        return f'Entrada general para {self.concierto.artista} - {self.get_precio_total()} €'
 
 
 # Entrada de grada, lleva un asiento asignado
@@ -16,13 +17,14 @@ class EntradaGrada(Entrada):
     def __init__(self, concierto, asiento):
         super().__init__(concierto)
         self.asiento = asiento
+        self.tipo = 'grada'
 
     # Cuesta lo mismo que la general
     def get_precio_total(self):
         return self.concierto.precio_base
 
     def __str__(self):
-        return f'Entrada de grada para {self.concierto.artista} - {self.get_precio_total():.2f} €'
+        return f'Entrada de grada para {self.concierto.artista} - {self.get_precio_total()} €'
 
 
 # Entrada de pista
@@ -30,13 +32,14 @@ class EntradaPista(Entrada):
     def __init__(self, concierto, de_pie):
         super().__init__(concierto)
         self.de_pie = de_pie
+        self.tipo = 'pista'
 
     # Precio base + 10%
     def get_precio_total(self):
-        return self.concierto.precio_base * 1.10
+        return self.concierto.precio_base + self.concierto.precio_base * 10 / 100
 
     def __str__(self):
-        return f'Entrada de pista para {self.concierto.artista} - {self.get_precio_total():.2f} €'
+        return f'Entrada de pista para {self.concierto.artista} - {self.get_precio_total()} €'
 
 
 # Entrada VIP, puede incluir consumicion o no
@@ -44,16 +47,17 @@ class EntradaVIP(Entrada):
     def __init__(self, concierto, incluye_consumicion):
         super().__init__(concierto)
         self.incluye_consumicion = incluye_consumicion
+        self.tipo = 'vip'
 
     # Precio base + 20% si incluye consumicion, si no + 15%
     def get_precio_total(self):
         if self.incluye_consumicion:
-            return self.concierto.precio_base * 1.20
+            return self.concierto.precio_base + self.concierto.precio_base * 20 / 100
         else:
-            return self.concierto.precio_base * 1.15
+            return self.concierto.precio_base + self.concierto.precio_base * 15 / 100
 
     def __str__(self):
-        return f'Entrada VIP para {self.concierto.artista} - {self.get_precio_total():.2f} €'
+        return f'Entrada VIP para {self.concierto.artista} - {self.get_precio_total()} €'
 
 
 class Concierto:
@@ -67,7 +71,7 @@ class Concierto:
 
     # Suma el precio de cada entrada vendida (cada tipo tiene su precio)
     def calcular_recaudacion(self):
-        acc = 0.0
+        acc = 0
         for entrada in self.entradas_vendidas:
             acc += entrada.get_precio_total()
         return acc
@@ -75,7 +79,7 @@ class Concierto:
     # Recaudacion entre el numero de entradas
     def calcular_precio_medio(self):
         if len(self.entradas_vendidas) == 0:
-            return 0.0
+            return 0
         return self.calcular_recaudacion() / len(self.entradas_vendidas)
 
     # Quedan entradas si las vendidas no llegan al aforo
@@ -104,7 +108,6 @@ class Usuario:
             raise Exception(f'No quedan entradas para el {concierto}')
 
         # Se crea la entrada segun el tipo que se pida
-        tipo_entrada = tipo_entrada.lower()
         if tipo_entrada == 'grada':
             entrada = EntradaGrada(concierto, '1A')
         elif tipo_entrada == 'pista':
@@ -119,7 +122,6 @@ class Usuario:
         concierto.entradas_vendidas.append(entrada)
         self.entradas_compradas.append(entrada)
         self.conciertos_asistidos.add(concierto)
-        return entrada
 
     def valorar(self, concierto, valoracion):
         if concierto not in self.conciertos_asistidos:
