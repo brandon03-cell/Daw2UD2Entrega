@@ -1,4 +1,4 @@
-from Koncurso import Concierto, Usuario, EntradaGrada, EntradaPista, EntradaVIP
+from Concurso import Concierto, Usuario, EntradaGrada, EntradaPista, EntradaVIP
 
 # Exercise 1
 concierto1 = Concierto('Juanjo', 'Sevilla', 40.0, 100)
